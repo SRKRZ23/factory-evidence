@@ -1,0 +1,18 @@
+{
+ "truth": {
+  "installation_name": "PT Baja Samudra Nusantara — Slab Plant 2",
+  "installation_country": "ID",
+  "cn_code": "7207 11 14",
+  "production_route": "C",
+  "specific_direct_emissions": 2.1,
+  "total_direct_emissions_t": 3360000,
+  "production_volume_t": 1600000,
+  "reporting_period_start": "2025-01-01",
+  "reporting_period_end": "2025-12-31",
+  "verified": true,
+  "verifier_name": "Equator Carbon Assurance B.V.",
+  "carbon_price_paid": null
+ },
+ "expect": "ACCEPT",
+ "lang": "id"
+}

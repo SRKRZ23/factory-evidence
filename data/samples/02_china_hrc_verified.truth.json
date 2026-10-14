@@ -1,0 +1,18 @@
+{
+ "truth": {
+  "installation_name": "华东恒钢板材有限公司 热轧一厂",
+  "installation_country": "CN",
+  "cn_code": "7208 39 00",
+  "production_route": "C",
+  "specific_direct_emissions": 1.95,
+  "total_direct_emissions_t": 4680000,
+  "production_volume_t": 2400000,
+  "reporting_period_start": "2025-01-01",
+  "reporting_period_end": "2025-12-31",
+  "verified": true,
+  "verifier_name": "Shanghai GreenLedger Verification Co.",
+  "carbon_price_paid": 7.9
+ },
+ "expect": "ACCEPT",
+ "lang": "zh"
+}

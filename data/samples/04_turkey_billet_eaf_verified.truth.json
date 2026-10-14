@@ -1,0 +1,18 @@
+{
+ "truth": {
+  "installation_name": "Ege Hurda Çelik — Ark Ocağı Tesisi",
+  "installation_country": "TR",
+  "cn_code": "7207 11 14",
+  "production_route": "E",
+  "specific_direct_emissions": 0.42,
+  "total_direct_emissions_t": 462000,
+  "production_volume_t": 1100000,
+  "reporting_period_start": "2025-01-01",
+  "reporting_period_end": "2025-12-31",
+  "verified": true,
+  "verifier_name": "Anadolu Karbon Doğrulama Ltd.",
+  "carbon_price_paid": null
+ },
+ "expect": "ACCEPT",
+ "lang": "tr"
+}

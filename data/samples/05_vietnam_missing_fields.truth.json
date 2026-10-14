@@ -1,0 +1,16 @@
+{
+ "truth": {
+  "installation_name": "Nhà máy cán nóng Cửa Biển",
+  "installation_country": "VN",
+  "cn_code": null,
+  "production_route": null,
+  "specific_direct_emissions": 1.8,
+  "reporting_period_start": null,
+  "reporting_period_end": null,
+  "verified": true,
+  "verifier_name": null,
+  "carbon_price_paid": null
+ },
+ "expect": "NEEDS_SUPPLIER",
+ "lang": "vi"
+}

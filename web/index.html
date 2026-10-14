@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factory Evidence Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f2ee;--panel:#fff;--ink:#16191d;--muted:#5d6670;--line:#d9d5cd;--accent:#0b5d4b;--accent-ink:#fff;--warn:#9a5b00;--warn-bg:#fdf3e1;
+--bad:#a3262a;--bad-bg:#fbe9e9;--ok:#0b5d4b;--ok-bg:#e6f2ee;--mono:'IBM Plex Mono',ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121416;--panel:#1b1e21;--ink:#e9e6e0;--muted:#9aa3ab;--line:#2d3135;
+--accent:#3fb394;--accent-ink:#0d1210;--warn:#e0a54a;--warn-bg:#2b2416;--bad:#e2686b;--bad-bg:#2c1a1b;--ok:#3fb394;--ok-bg:#16241f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 'IBM Plex Sans',system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{font-weight:700;font-size:18px;letter-spacing:.01em}.brand small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{font:500 12px var(--mono);padding:4px 8px;border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+.tag.on{border-color:var(--accent);color:var(--accent)}.tag.demo{border-color:var(--warn);color:var(--warn)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+.kpi{background:var(--panel);padding:16px 24px}.kpi b{display:block;font-size:26px;font-weight:600;margin-top:2px}.kpi span{color:var(--muted);font-size:13px}
+.kpi.good b{color:var(--ok)}
+main{display:grid;grid-template-columns:280px minmax(0,1fr) 440px;gap:16px;padding:16px 24px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.list button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 14px;color:var(--ink);cursor:pointer;font:inherit}
+.list button:hover{background:var(--bg)}.list button.sel{background:var(--bg);box-shadow:inset 3px 0 0 var(--accent)}
+.list .t{font-weight:600;font-size:14px}.list .s{color:var(--muted);font-size:12px;margin-top:2px}
+.chip{display:inline-block;font:600 11px var(--mono);padding:2px 6px;border-radius:3px;margin-top:6px}
+.ACCEPT{background:var(--ok-bg);color:var(--ok)}.NEEDS_SUPPLIER{background:var(--warn-bg);color:var(--warn)}.NEEDS_HUMAN{background:var(--bad-bg);color:var(--bad)}
+.scan{padding:10px}.scan img{width:100%;display:block;border:1px solid var(--line)}
+.pane{padding:16px}.pane h3{margin:18px 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.pane h3:first-child{margin-top:0}
+.decision{padding:12px 14px;border-radius:4px;font-weight:600}.money{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.money div{border:1px solid var(--line);border-radius:4px;padding:10px 12px}.money span{color:var(--muted);font-size:12px}.money b{display:block;font-size:22px;font-weight:600}
+.money .after b{color:var(--ok)}
+table{width:100%;border-collapse:collapse;font-size:13px}td{border-top:1px solid var(--line);padding:6px 4px;vertical-align:top}
+td:first-child{color:var(--muted);width:42%}td .ev{display:block;color:var(--muted);font:12px var(--mono);margin-top:2px}
+ul.f{margin:0;padding-left:18px}ul.f li{margin:4px 0}.sev-human{color:var(--bad)}.sev-supplier{color:var(--warn)}.sev-info{color:var(--muted)}
+pre.letter{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:12px;max-height:320px;overflow:auto}
+.btn{font:600 14px inherit;padding:9px 14px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.secondary{background:none;color:var(--accent)}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.bench{padding:14px 24px 28px;color:var(--muted);font-size:13px}.bench b{color:var(--ink)}.muted{color:var(--muted)}
+.foot{padding:0 24px 32px;color:var(--muted);font-size:12px}
+@media (max-width:1100px){main{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){header,main,.bench,.foot{padding-left:16px;padding-right:16px}.kpi{padding:12px 16px}.kpi b{font-size:20px}.money{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Factory Evidence Agent<small>CBAM supplier evidence for EU steel importers · open models on AMD</small></div>
+  <div class="tags" id="tags"></div>
+</header>
+<section class="kpis" id="kpis"></section>
+<main>
+  <nav class="card list" id="list" aria-label="Supplier documents"></nav>
+  <section class="card scan"><img id="scan" alt="Supplier document scan"></section>
+  <section class="card pane" id="pane"><p class="muted">Select a supplier document.</p></section>
+</main>
+<section class="bench" id="bench"></section>
+<p class="foot">Default values and benchmarks: European Commission CBAM files (default values 06.08.2026, benchmarks 06.02.2026); CBAM factor per Directive 2003/87/EC Art. 10a(1a); 2026 certificate price €82.32. All supplier documents shown are synthetic. The model reads; deterministic rules decide; a person approves.</p>
+<script>
+const eur = v => v == null ? '—' : '€' + Math.round(v).toLocaleString('en-US');
+const eurT = v => v == null ? '—' : '€' + v.toFixed(0) + '/t';
+const NAMES = {"01_indonesia_slab_verified":["Indonesia · slab","PT Baja Samudra Nusantara"],"02_china_hrc_verified":["China · hot-rolled coil","华东恒钢板材"],
+ "03_india_slab_selfdeclared":["India · slab","Deccan Coastal Steel"],"04_turkey_billet_eaf_verified":["Türkiye · billet (EAF)","Ege Hurda Çelik"],
+ "05_vietnam_missing_fields":["Viet Nam · hot-rolled coil","Thép Cửa Biển"],"06_ukraine_implausible":["Ukraine · slab","Приазовська Сталь"]};
+const LABEL = {ACCEPT:"Accepted — verified actual emissions replace the EU default", NEEDS_SUPPLIER:"Needs the supplier — request drafted below", NEEDS_HUMAN:"Needs a person — numbers do not add up"};
+let status = {};
+async function j(u, o) { const r = await fetch(u, o); if (!r.ok) throw new Error(await r.text()); return r.json(); }
+async function init() {
+  status = await j('/api/status');
+  document.getElementById('tags').innerHTML = (status.live_model
+    ? `<span class="tag on">LIVE · AMD · ${status.vision_model}</span>` : `<span class="tag demo">DEMO DATA · model offline</span>`)
+    + `<span class="tag ${status.evolus_connected ? 'on' : ''}">Evolus ${status.evolus_connected ? 'connected' : 'not connected'}</span>`;
+  const docs = (await j('/api/samples')).filter(d => d.expect);
+  const list = document.getElementById('list');
+  for (const d of docs) {
+    const b = document.createElement('button'); b.id = 'b-' + d.id;
+    b.innerHTML = `<div class="t">${NAMES[d.id][0]}</div><div class="s">${NAMES[d.id][1]} · ${d.lang.toUpperCase()}</div><span class="chip" id="c-${d.id}">…</span>`;
+    b.onclick = () => show(d.id); list.appendChild(b);
+  }
+  await kpis(); show(docs[0].id); bench();
+}
+async function kpis() {
+  const p = await j('/api/portfolio'); const t = p.totals;
+  for (const r of p.rows) { const c = document.getElementById('c-' + r.id); if (c) { c.className = 'chip ' + r.decision; c.textContent = r.decision.replace('_', ' '); } }
+  document.getElementById('kpis').innerHTML =
+    `<div class="kpi"><span>Imports this quarter</span><b>${t.tonnes.toLocaleString('en-US')} t</b></div>
+     <div class="kpi"><span>CBAM cost at EU default values</span><b>${eur(t.eur_default)}</b></div>
+     <div class="kpi good"><span>With verified supplier evidence</span><b>${eur(t.eur_with_evidence)}</b></div>
+     <div class="kpi good"><span>If pending suppliers verify</span><b>${eur(t.eur_if_suppliers_verify)}</b></div>`;
+}
+async function show(id) {
+  document.querySelectorAll('.list button').forEach(b => b.classList.toggle('sel', b.id === 'b-' + id));
+  document.getElementById('scan').src = `/api/samples/${id}.png`;
+  const pane = document.getElementById('pane'); pane.innerHTML = '<p class="muted">Reading the document…</p>';
+  const r = await j('/api/analyze/' + id, { method: 'POST' });
+  const a = r.assessment, e = a.exposure || {}, v = r.extraction.values, ev = r.extraction.evidence || {};
+  const after = e.eur_per_t_actual ?? e.potential_eur_per_t_if_verified;
+  const afterLabel = e.eur_per_t_actual != null ? 'With verified evidence' : (e.potential_eur_per_t_if_verified != null ? 'If the supplier verifies' : 'With evidence');
+  const rows = Object.entries(v).filter(([k, x]) => x !== null && x !== undefined && x !== '').map(([k, x]) =>
+    `<tr><td>${k.replaceAll('_', ' ')}</td><td>${x}${ev[k] ? `<span class="ev">“${ev[k]}”</span>` : ''}</td></tr>`).join('');
+  const f = a.findings.map(x => `<li class="sev-${x.severity}">${x.message}</li>`).join('') || '<li class="sev-info">All checks passed.</li>';
+  pane.innerHTML = `<h3>Decision</h3><div class="decision ${a.decision}">${LABEL[a.decision]}</div>
+    <div class="money"><div><span>EU default ${e.year || ''}</span><b>${eurT(e.eur_per_t_default)}</b></div>
+    <div class="after"><span>${afterLabel}</span><b>${eurT(after)}</b></div></div>
+    ${r.tonnes ? `<p class="muted">${r.tonnes.toLocaleString('en-US')} t this quarter · ${e.totals?.eur_saving != null ? 'saving ' + eur(e.totals.eur_saving) : (e.potential_saving_eur_per_t ? 'potential ' + eur(e.potential_saving_eur_per_t * r.tonnes) : '')}</p>` : ''}
+    <h3>Checks</h3><ul class="f">${f}</ul>
+    <h3>Read from the document${r.extraction.source === 'demo' ? ' (demo data)' : ''}</h3><table>${rows}</table>
+    ${r.letter ? `<h3>Request to supplier · ${r.letter.language}</h3><pre class="letter" id="letter">${r.letter.body.replace(/[<&]/g, c => ({'<':'&lt;','&':'&amp;'})[c])}</pre>
+      <div class="row"><button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('letter').innerText)">Copy request</button>
+      <button class="btn secondary" ${status.evolus_connected ? '' : 'disabled title="Connect Evolus"'}>Send via Evolus workflow</button></div>` : ''}
+    <p class="muted" style="margin-top:14px">CN ${e.cn || '—'} · route ${e.route || '—'} · benchmark ${e.benchmark ?? '—'} tCO2e/t · ${r.seconds}s</p>`;
+  bench();
+}
+async function bench() {
+  const b = await j('/api/bench');
+  document.getElementById('bench').innerHTML = b.calls
+    ? `AMD inference · <b>${b.model}</b> on ${b.endpoint} · ${b.calls} calls · median extraction <b>${b.extract_seconds_median}s</b> per page (${b.pages_per_minute} pages/min) · median <b>${b.completion_tok_per_s_median} tok/s</b> · ${b.tokens.toLocaleString('en-US')} tokens`
+    : 'AMD inference panel: no live model calls yet (demo data).';
+}
+init().catch(e => { document.getElementById('pane').innerHTML = `<p class="muted">Error: ${e.message}</p>`; });
+</script>
+</body>
+</html>

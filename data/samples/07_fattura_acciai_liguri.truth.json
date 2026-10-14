@@ -1,0 +1,26 @@
+{
+ "truth": {
+  "shipments": [
+   {
+    "supplier": "PT Baja Samudra Nusantara",
+    "country": "ID",
+    "cn": "7207 11 14",
+    "tonnes": 12400
+   },
+   {
+    "supplier": "Deccan Coastal Steel",
+    "country": "IN",
+    "cn": "7207 12 10",
+    "tonnes": 8150
+   },
+   {
+    "supplier": "Priazovska Stal Grup",
+    "country": "UA",
+    "cn": "7207 11 14",
+    "tonnes": 5300
+   }
+  ]
+ },
+ "expect": null,
+ "lang": "it"
+}

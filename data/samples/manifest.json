@@ -1,0 +1,37 @@
+[
+ {
+  "id": "01_indonesia_slab_verified",
+  "lang": "id",
+  "expect": "ACCEPT"
+ },
+ {
+  "id": "02_china_hrc_verified",
+  "lang": "zh",
+  "expect": "ACCEPT"
+ },
+ {
+  "id": "03_india_slab_selfdeclared",
+  "lang": "en",
+  "expect": "NEEDS_SUPPLIER"
+ },
+ {
+  "id": "04_turkey_billet_eaf_verified",
+  "lang": "tr",
+  "expect": "ACCEPT"
+ },
+ {
+  "id": "05_vietnam_missing_fields",
+  "lang": "vi",
+  "expect": "NEEDS_SUPPLIER"
+ },
+ {
+  "id": "06_ukraine_implausible",
+  "lang": "uk",
+  "expect": "NEEDS_HUMAN"
+ },
+ {
+  "id": "07_fattura_acciai_liguri",
+  "lang": "it",
+  "expect": null
+ }
+]
