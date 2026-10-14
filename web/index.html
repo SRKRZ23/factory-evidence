@@ -65,11 +65,20 @@ const NAMES = {"01_indonesia_slab_verified":["Indonesia · slab","PT Baja Samudr
  "05_vietnam_missing_fields":["Viet Nam · hot-rolled coil","Thép Cửa Biển"],"06_ukraine_implausible":["Ukraine · slab","Приазовська Сталь"]};
 const LABEL = {ACCEPT:"Accepted — verified actual emissions replace the EU default", NEEDS_SUPPLIER:"Needs the supplier — request drafted below", NEEDS_HUMAN:"Needs a person — numbers do not add up"};
 let status = {};
-async function j(u, o) { const r = await fetch(u, o); if (!r.ok) throw new Error(await r.text()); return r.json(); }
+function staticPath(u) {
+  if (u.startsWith('/api/analyze/')) return 'data/analyze_' + u.split('/').pop().split('?')[0] + '.json';
+  return 'data/' + u.replace('/api/', '').split('?')[0] + '.json';
+}
+async function j(u, o) {
+  const url = window.STATIC_SNAPSHOT ? staticPath(u) : u;
+  const r = await fetch(url, window.STATIC_SNAPSHOT ? undefined : o);
+  if (!r.ok) throw new Error(await r.text()); return r.json();
+}
+const img = id => window.STATIC_SNAPSHOT ? `samples/${id}.png` : `/api/samples/${id}.png`;
 async function init() {
   status = await j('/api/status');
   document.getElementById('tags').innerHTML = (status.live_model
-    ? `<span class="tag on">LIVE · AMD · ${status.vision_model}</span>` : `<span class="tag demo">DEMO DATA · model offline</span>`)
+    ? `<span class="tag on">${status.static_snapshot ? 'RECORDED' : 'LIVE'} · AMD · ${status.vision_model}</span>` : `<span class="tag demo">DEMO DATA · model offline</span>`)
     + `<span class="tag ${status.evolus_connected ? 'on' : ''}">Evolus ${status.evolus_connected ? 'connected' : 'not connected'}</span>`;
   const docs = (await j('/api/samples')).filter(d => d.expect);
   const list = document.getElementById('list');
@@ -91,7 +100,7 @@ async function kpis() {
 }
 async function show(id) {
   document.querySelectorAll('.list button').forEach(b => b.classList.toggle('sel', b.id === 'b-' + id));
-  document.getElementById('scan').src = `/api/samples/${id}.png`;
+  document.getElementById('scan').src = img(id);
   const pane = document.getElementById('pane'); pane.innerHTML = '<p class="muted">Reading the document…</p>';
   const r = await j('/api/analyze/' + id, { method: 'POST' });
   const a = r.assessment, e = a.exposure || {}, v = r.extraction.values, ev = r.extraction.evidence || {};
