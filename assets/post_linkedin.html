@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;color:#0A0A0A}
+:root{--r:#CC0000;--ink:#0A0A0A;--g2:#6a6a6a;--line:#e6e6e6;--rf:#fbeaea}
+.wrap{position:relative;height:100%;padding:70px 72px 56px}
+.wrap::before{content:'';position:absolute;top:0;left:0;width:100%;height:14px;background:var(--r)}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.b{font-size:15px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:5px}
+.b-r{background:var(--r);color:#fff}.b-o{border:2px solid var(--ink)}.b-ro{background:var(--rf);color:var(--r);border:2px solid var(--r)}
+.kick{font-size:26px;font-weight:700;color:var(--g2);margin-top:38px;letter-spacing:-.3px}
+.hero{display:flex;align-items:baseline;gap:22px;margin-top:6px}
+.big{font-size:132px;font-weight:900;letter-spacing:-6px;line-height:1}.big.r{color:var(--r)}
+.arrow{font-size:80px;font-weight:900;color:var(--g2)}
+.unit{font-size:30px;font-weight:800;color:var(--g2);margin-top:4px}
+.sub{font-size:26px;font-weight:600;color:var(--g2);margin-top:22px;line-height:1.35;letter-spacing:-.3px}.sub b{color:var(--ink)}
+.h{font-size:15px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin:40px 0 14px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--ink);border-radius:10px;overflow:hidden}
+.st{padding:18px 16px;border-right:2px solid var(--line)}.st:last-child{border-right:none}
+.st .n{font-size:30px;font-weight:900;color:var(--r)}.st .t{font-size:19px;font-weight:800;margin-top:4px}.st .d{font-size:15px;color:var(--g2);margin-top:6px;line-height:1.35;font-weight:500}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.w{border:2px solid var(--line);border-radius:8px;padding:14px 16px}.w b{font-size:18px;font-weight:800}.w span{display:block;font-size:16px;color:var(--g2);margin-top:4px;line-height:1.35;font-weight:500}
+.foot{position:absolute;left:72px;right:72px;bottom:46px;display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:var(--g2)}
+.src{font-size:12.5px;font-weight:500;color:#9a9a9a;position:absolute;left:72px;right:72px;bottom:20px}
+</style></head><body><div class="wrap">
+<div class="badges"><span class="b b-r">AMD Hackathon ACT III</span><span class="b b-ro">🏆 ACT I — 1st place AI Agents</span><span class="b b-o">Open models on AMD · Evolus</span></div>
+<div class="kick">EU carbon border cost (CBAM) · steel slab from Indonesia · 2026</div>
+<div class="hero"><div class="big">€636</div><div class="arrow">→</div><div class="big r">€63</div></div>
+<div class="unit">per tonne — EU default vs. verified supplier evidence</div>
+<div class="sub">The evidence exists, but it's buried in supplier scans in Chinese, Turkish, Indonesian, Ukrainian. <b>Factory Evidence</b> reads it, checks it and <b>turns&nbsp;it&nbsp;into&nbsp;€&nbsp;saved.</b></div>
+<div class="h">How it works</div>
+<div class="steps">
+ <div class="st"><div class="n">1</div><div class="t">Read</div><div class="d">Open models on AMD read any language and quote the line behind every number</div></div>
+ <div class="st"><div class="n">2</div><div class="t">Check</div><div class="d">Rules test each value against official EU tables</div></div>
+ <div class="st"><div class="n">3</div><div class="t">Decide</div><div class="d">Accept · ask the supplier · escalate to a person</div></div>
+ <div class="st"><div class="n">4</div><div class="t">Act</div><div class="d">Evolus workflow sends the request in the supplier's language</div></div>
+</div>
+<div class="h">Who gets what</div>
+<div class="who">
+ <div class="w"><b>Importers &amp; manufacturers</b><span>€ saved per tonne, per supplier</span></div>
+ <div class="w"><b>Advisors &amp; auditors</b><span>A cited evidence file instead of chasing emails</span></div>
+ <div class="w"><b>Workflow platforms</b><span>A real compliance process on their building blocks</span></div>
+ <div class="w"><b>Data owners</b><span>Confidential trade data stays with open models on AMD</span></div>
+</div>
+<div class="h">Business model</div>
+<div class="steps" style="grid-template-columns:1.1fr 1fr 1fr">
+ <div class="st"><div class="t">€573k less CBAM</div><div class="d">per 1,000 t of Indonesian slab, 2026, from the official EU tables</div></div>
+ <div class="st"><div class="t">SaaS + per tonne</div><div class="d">for CBAM declarants, priced at a small fraction of the saving</div></div>
+ <div class="st"><div class="t">Next: EUDR &amp; DPP</div><div class="d">same document intake for deforestation rules and battery passports</div></div>
+</div>
+<div class="foot"><span>FACTORY <span style="color:var(--r)">EVIDENCE</span> · model reads, rules decide, a person approves</span><span>lablab.ai · ACT III</span></div>
+<div class="src">€/t from official EU CBAM default values (06.08.2026) and benchmarks, 2026 price €82.32, actual 2.10 tCO2e/t (illustrative supplier document).</div>
+</div></body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:500px;overflow:hidden;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;color:#0A0A0A}
+:root{--r:#CC0000;--ink:#0A0A0A;--g2:#6a6a6a;--line:#e6e6e6;--rf:#fbeaea}
+.wrap{width:1600px;height:500px;position:relative;padding:54px 64px;display:flex;flex-direction:column;justify-content:center}
+.wrap::before{content:'';position:absolute;top:0;left:0;width:100%;height:12px;background:var(--r)}
+.badges{display:flex;gap:12px;margin-bottom:20px}
+.b{font-size:15px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:7px 16px;border-radius:5px}
+.b-r{background:var(--r);color:#fff}.b-o{background:#fff;color:var(--ink);border:2px solid var(--ink)}.b-ro{background:var(--rf);color:var(--r);border:2px solid var(--r)}
+.h1{font-size:92px;font-weight:900;letter-spacing:-4px;line-height:1;color:var(--ink)}
+.r{color:var(--r)}
+.tag{font-size:27px;font-weight:600;color:var(--g2);margin-top:14px;letter-spacing:-.5px}
+.tag b{color:var(--ink)}
+.strip{display:flex;gap:0;margin-top:26px;border:2px solid var(--ink);border-radius:10px;overflow:hidden;width:max-content}
+.mi{padding:12px 26px;border-right:2px solid var(--line);text-align:center}.mi:last-child{border-right:none}
+.mn{font-size:30px;font-weight:900;letter-spacing:-1px;color:var(--ink)}.mn.r{color:var(--r)}
+.ml{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--g2);margin-top:3px}
+.foot{position:absolute;bottom:34px;right:64px;font-size:16px;font-weight:700;color:var(--g2);letter-spacing:.5px}
+</style></head><body>
+<div class="wrap">
+  <div class="badges">
+    <span class="b b-r">AMD Hackathon ACT III · Intelligent Industry</span>
+    <span class="b b-ro">🏆 ACT I — 1st Place AI Agents</span>
+    <span class="b b-o">Open models on AMD · Evolus</span>
+  </div>
+  <div class="h1">FACTORY <span class="r">EVIDENCE</span></div>
+  <div class="tag">Supplier documents in any language → <b>verified CBAM savings</b> for EU steel importers — <b>human-approved</b></div>
+  <div class="strip">
+    <div class="mi"><div class="mn r">€636 → €63</div><div class="ml">CBAM per tonne · slab</div></div>
+    <div class="mi"><div class="mn">−66%</div><div class="ml">CBAM cost · demo portfolio</div></div>
+    <div class="mi"><div class="mn r">123</div><div class="ml">countries · official EU tables</div></div>
+    <div class="mi"><div class="mn">7.2%</div><div class="ml">energy saving · demo plant</div></div>
+  </div>
+  <div class="foot">AMD Developer Hackathon ACT III · lablab.ai</div>
+</div>
+</body></html>
