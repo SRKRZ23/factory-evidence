@@ -1,0 +1,54 @@
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;color:#0A0A0A}
+:root{--r:#CC0000;--ink:#0A0A0A;--g1:#3a3a3a;--g2:#6a6a6a;--g3:#9a9a9a;--line:#e6e6e6;--rf:#fbeaea}
+.slide{width:1920px;height:1080px;position:relative;background:#fff;padding:64px 84px;display:flex;flex-direction:column;overflow:hidden}
+.slide::before{content:'';position:absolute;top:0;left:0;width:100%;height:10px;background:var(--r)}
+.eye{font-size:14px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:var(--r);margin-bottom:12px}
+.h1{font-size:118px;font-weight:900;letter-spacing:-5px;line-height:.92;color:var(--ink)}
+.h2{font-size:58px;font-weight:900;letter-spacing:-2.3px;line-height:1.0;color:var(--ink)}
+.h3{font-size:30px;font-weight:800;letter-spacing:-1px;color:var(--ink)}
+.r{color:var(--r)}
+.divr{width:64px;height:5px;background:var(--r);border-radius:3px;margin:18px 0 22px}
+.lead{font-size:24px;line-height:1.45;color:var(--g1);font-weight:500}
+.body{font-size:18px;line-height:1.55;color:var(--g1)}
+.sm{font-size:14px;color:var(--g2);line-height:1.5}
+.tiny{font-size:11.5px;color:var(--g3);line-height:1.5}
+.flex{display:flex}.g16{gap:16px}.g20{gap:20px}.g24{gap:24px}.g28{gap:28px}.g36{gap:36px}
+.full{flex:1}
+.badge{display:inline-flex;align-items:center;padding:8px 18px;border-radius:4px;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.b-r{background:var(--r);color:#fff}.b-o{background:#fff;color:var(--ink);border:2px solid var(--ink)}.b-ro{background:var(--rf);color:var(--r);border:2px solid var(--r)}
+.card{border:2px solid var(--line);border-radius:10px;padding:24px 28px;background:#fff}
+.card-r{border-color:var(--r);background:var(--rf)}.card-k{border-color:var(--ink)}
+.kpi{font-size:56px;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--r)}.kpi.k{color:var(--ink)}
+.klbl{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g2);margin-top:8px}
+.tag{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--r);margin-bottom:8px}
+.sn{position:absolute;bottom:30px;right:84px;font-size:15px;font-weight:800;color:var(--g3);letter-spacing:2px}
+.foot{position:absolute;bottom:30px;left:84px;font-size:13px;color:var(--g2)}
+.quote{border-left:5px solid var(--r);padding:12px 22px;background:var(--rf);font-size:18px;color:var(--ink);font-weight:600;border-radius:0 6px 6px 0}
+sup{font-size:.58em;color:var(--r);font-weight:800;vertical-align:super;line-height:0}
+.prow{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);font-size:16.5px;color:var(--g1)}
+.prow:last-child{border-bottom:none}.prow b{color:var(--ink)}
+.pv{color:var(--r);font-weight:800;white-space:nowrap;text-align:right}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--g2);text-align:left;padding:8px 10px;border-bottom:2px solid var(--ink)}
+td{font-size:16px;color:var(--g1);padding:8px 10px;border-bottom:1px solid var(--line)}
+td b{color:var(--ink)} tr:last-child td{border-bottom:none}
+.mstrip{display:flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden}
+.mi{flex:1;padding:14px 12px;border-right:2px solid var(--line);text-align:center}.mi:last-child{border-right:none}
+.mn{font-size:30px;font-weight:900;letter-spacing:-1px;color:var(--ink)}.mn.r{color:var(--r)}
+.ml{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--g2);margin-top:5px}
+.src{font-size:11px;color:var(--g3);line-height:1.5}.src b{color:var(--g2);font-weight:800}
+@page{size:1920px 1080px;margin:0}html{print-color-adjust:exact;-webkit-print-color-adjust:exact}@media print{.slide{page-break-after:always}.slide:last-child{page-break-after:auto}}
+
+.lead b{color:var(--ink)}
+.slide img{border:1px solid var(--line);border-radius:6px}
+/* ACT III readability pass: judges watch on laptops and in video — larger type, less empty card space */
+.eye{font-size:19px;letter-spacing:4px}.h2{font-size:74px;letter-spacing:-2.6px}.h3{font-size:36px}
+.body{font-size:25px;line-height:1.45}.sm{font-size:20px}.lead{font-size:30px}
+.badge{font-size:18px;padding:10px 20px}.kpi{font-size:78px}.klbl{font-size:16px;letter-spacing:1.2px}
+.prow{font-size:24px;padding:16px 0}.pv{font-size:22px}
+th{font-size:15px;padding:12px 12px}td{font-size:22px;padding:13px 12px}
+.quote{font-size:25px;padding:18px 26px}.src{font-size:15px}.foot{font-size:16px}.sn{font-size:18px}
+.card{padding:30px 34px}.tag{font-size:14px}
+.body{font-size:27px}.prow{font-size:25px}td{font-size:23px}.sm{font-size:21px}
