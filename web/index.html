@@ -54,6 +54,7 @@ pre.letter{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--bg);b
   <section class="card scan"><img id="scan" alt="Supplier document scan"></section>
   <section class="card pane" id="pane"><p class="muted">Select a supplier document.</p></section>
 </main>
+<section class="card pane" id="energy" style="margin:0 24px"></section>
 <section class="bench" id="bench"></section>
 <p class="foot">Default values and benchmarks: European Commission CBAM files (default values 06.08.2026, benchmarks 06.02.2026); CBAM factor per Directive 2003/87/EC Art. 10a(1a); 2026 certificate price €82.32. All supplier documents shown are synthetic. The model reads; deterministic rules decide; a person approves.</p>
 <script>
@@ -77,7 +78,7 @@ async function init() {
     b.innerHTML = `<div class="t">${NAMES[d.id][0]}</div><div class="s">${NAMES[d.id][1]} · ${d.lang.toUpperCase()}</div><span class="chip" id="c-${d.id}">…</span>`;
     b.onclick = () => show(d.id); list.appendChild(b);
   }
-  await kpis(); show(docs[0].id); bench();
+  await kpis(); show(docs[0].id); bench(); energy();
 }
 async function kpis() {
   const p = await j('/api/portfolio'); const t = p.totals;
@@ -110,6 +111,15 @@ async function show(id) {
       <button class="btn secondary" ${status.evolus_connected ? '' : 'disabled title="Connect Evolus"'}>Send via Evolus workflow</button></div>` : ''}
     <p class="muted" style="margin-top:14px">CN ${e.cn || '—'} · route ${e.route || '—'} · benchmark ${e.benchmark ?? '—'} tCO2e/t · ${r.seconds}s</p>`;
   bench();
+}
+async function energy() {
+  const e = await j('/api/energy'), r = e.result;
+  document.getElementById('energy').innerHTML = `<h3>Module B · Transizione 5.0 energy-saving evidence · Line 3 inverter retrofit</h3>
+    <div class="money" style="grid-template-columns:repeat(4,1fr)"><div><span>Baseline (what it would have used)</span><b>${r.baseline_mwh} MWh</b></div>
+    <div><span>Metered after retrofit</span><b>${r.metered_mwh} MWh</b></div><div class="after"><span>Measured saving · 95% interval</span><b>${r.saving_pct}%</b><span>${r.ci95_pct[0]}–${r.ci95_pct[1]}%</span></div>
+    <div class="after"><span>Energy cost saved per year</span><b>${eur(r.eur_saved_year)}</b></div></div>
+    <p class="muted">Thresholds: process ≥3% <b>${r.meets_process_3pct ? 'met' : 'not met'}</b> · site ≥5% <b>${r.meets_site_5pct ? 'met' : 'not met'}</b> · baseline R² ${r.r2} · ${r.days} days · ${e.data}. The credit amount is certified by your EGE.</p>
+    <h3>Draft note for the energy manager (EGE)${e.source === 'demo' ? ' · demo' : ''}</h3><pre class="letter">${e.dossier.replace(/[<&]/g, c => ({'<':'&lt;','&':'&amp;'})[c])}</pre>`;
 }
 async function bench() {
   const b = await j('/api/bench');

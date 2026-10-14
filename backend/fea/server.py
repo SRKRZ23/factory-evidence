@@ -156,6 +156,37 @@ def bench():
             "recent": [c.__dict__ for c in s[-10:]]}
 
 
+ENERGY_CSV = SAMPLES / "energy_line3_15min.csv"
+DOSSIER_SYSTEM = """You draft a short technical note (Italian, then a 3-line English summary) for a certified energy manager (EGE)
+preparing the Transizione 5.0 ex-post energy-saving certification. Use ONLY the measured figures given; do not invent numbers or legal
+claims; state the method (baseline regression on production, weather and hour-of-week; IPMVP Option C style) and the 95% interval;
+end with what the EGE still has to check on site. Max 200 words."""
+
+
+@app.get("/api/energy")
+def energy():
+    from dataclasses import asdict
+    from .energy.baseline import load, measure, synth
+    if not ENERGY_CSV.exists():
+        synth(ENERGY_CSV)
+    r = {k: (float(v) if hasattr(v, "dtype") else (tuple(float(x) for x in v) if isinstance(v, tuple) else v))
+         for k, v in asdict(measure(load(ENERGY_CSV))).items()}
+    r = {k: (bool(v) if k.startswith("meets") else v) for k, v in r.items()}
+    facts = (f"Line 3 (compressed air + extrusion), inverter retrofit. Post period {r['days']} days, {r['intervals']} intervals of 15 min. "
+             f"Baseline {r['baseline_mwh']} MWh, metered {r['metered_mwh']} MWh, saving {r['saving_mwh']} MWh = {r['saving_pct']} % "
+             f"(95% interval {r['ci95_pct'][0]}–{r['ci95_pct'][1]} %), baseline model R2 {r['r2']}. "
+             f"Thresholds: process 3 % {'met' if r['meets_process_3pct'] else 'not met'}, site 5 % {'met' if r['meets_site_5pct'] else 'not met'}. "
+             f"Energy cost saved ~EUR {r['eur_saved_year']:,} per year at EUR 146.6/MWh.")
+    if live():
+        note = MODEL.chat("dossier", [{"role": "system", "content": DOSSIER_SYSTEM}, {"role": "user", "content": facts}], temperature=0.2, max_tokens=700)
+        src = "live"
+    else:
+        note = ("Nota tecnica per l'EGE — Linea 3 (aria compressa + estrusione), retrofit inverter.\n" + facts +
+                "\nVerifiche in sito a cura dell'EGE: perimetro di misura, taratura contatori, assenza di altre modifiche nel periodo.")
+        src = "demo"
+    return {"result": r, "facts": facts, "dossier": note, "source": src, "data": "synthetic 15-min meter data (fictional plant)"}
+
+
 @app.get("/api/evolus-log")
 def evolus_log():
     return EVOLUS.log[-50:]
