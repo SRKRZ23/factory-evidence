@@ -46,7 +46,7 @@ for the certified energy manager (EGE). No language model in the numbers.
 ## Demo
 
 - Live demo (recorded from live AMD runs): https://factory-evidence.netlify.app
-- Demo video (2:18, voice-over + captions): link added at submission
+- Demo video (2:18, voice-over + captions): https://youtu.be/lqp4fZaC-Ww
 - Run locally in one command: `docker build -t factory-evidence . && docker run -p 8080:8080 --env-file .env factory-evidence`
   then open http://localhost:8080. Without keys the app runs on bundled demo data and says so ("DEMO DATA" badge).
 

@@ -56,7 +56,7 @@ Deadline: **18.10.2026, 10:00 UTC = 15:00 Tashkent**. Target: submit by **12:00 
 - Demo: https://factory-evidence.netlify.app
 - Slides: `deck/Factory_Evidence_deck.pdf`
 - Cover: `assets/team_cover_16x9.png` (or a dedicated submission cover)
-- Video: YouTube, unlisted or public
+- Video: https://youtu.be/lqp4fZaC-Ww (2:18)
 
 ## Video (final cut, 2:18)
 
