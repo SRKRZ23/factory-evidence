@@ -81,7 +81,7 @@ async function init() {
   status = await j('/api/status');
   document.getElementById('tags').innerHTML = (status.live_model
     ? `<span class="tag on">${status.static_snapshot ? 'RECORDED' : 'LIVE'} · AMD · ${status.vision_model}</span>` : `<span class="tag demo">DEMO DATA · model offline</span>`)
-    + `<span class="tag ${status.evolus_connected ? 'on' : ''}">Evolus ${status.evolus_connected ? 'connected' : 'not connected'}</span>`;
+    + `<span class="tag ${status.evolus_connected ? 'on' : ''}">Evolus ${status.evolus_agent ? 'agent · own model on AMD' : status.evolus_connected ? 'connected' : 'not connected'}</span>`;
   const docs = (await j('/api/samples')).filter(d => d.expect);
   const list = document.getElementById('list');
   for (const d of docs) {
@@ -117,11 +117,20 @@ async function show(id) {
     ${r.tonnes ? `<p class="muted">${r.tonnes.toLocaleString('en-US')} t this quarter · ${e.totals?.eur_saving != null ? 'saving ' + eur(e.totals.eur_saving) : (e.potential_saving_eur_per_t ? 'potential ' + eur(e.potential_saving_eur_per_t * r.tonnes) : '')}</p>` : ''}
     <h3>Checks</h3><ul class="f">${f}</ul>
     <h3>Read from the document${r.extraction.source === 'demo' ? ' (demo data)' : ''}</h3><table>${rows}</table>
-    ${r.letter ? `<h3>Request to supplier · ${r.letter.language}</h3><pre class="letter" id="letter">${r.letter.body.replace(/[<&]/g, c => ({'<':'&lt;','&':'&amp;'})[c])}</pre>
+    ${r.letter ? `<h3>Request to supplier · ${r.letter.language}</h3>
+      <p class="muted">${r.letter.source === 'evolus-agent' ? 'Written by the Evolus agent “CBAM Supplier Follow-up” · ' + r.letter.model : r.letter.source === 'live' ? 'Written by ' + (r.letter.model || 'the model') + ' on AMD' : 'Template'} · facts from the rules, not the model</p>
+      <pre class="letter" id="letter">${r.letter.body.replace(/[<&]/g, c => ({'<':'&lt;','&':'&amp;'})[c])}</pre>
       <div class="row"><button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('letter').innerText)">Copy request</button>
-      <button class="btn secondary" ${status.evolus_connected ? '' : 'disabled title="Connect Evolus"'}>Send via Evolus workflow</button></div>` : ''}
+      <button class="btn secondary" id="approve" onclick="approve('${id}')" ${r.approval ? 'disabled' : ''}>${r.approval ? 'Approved by ' + r.approval.by + ' · ' + r.approval.at : 'Approve request (a person decides)'}</button></div>` : ''}
+    ${r.auditor_pack && r.auditor_pack.body ? `<details style="margin-top:12px"><summary>Evidence file for the auditor · personal data removed by Evolus AI Tool “anonymize”</summary>
+      <pre class="letter">${r.auditor_pack.body.replace(/[<&]/g, c => ({'<':'&lt;','&':'&amp;'})[c])}</pre></details>` : ''}
     <p class="muted" style="margin-top:14px">CN ${e.cn || '—'} · route ${e.route || '—'} · benchmark ${e.benchmark ?? '—'} tCO2e/t · ${r.seconds}s</p>`;
   bench();
+}
+async function approve(id) {
+  if (window.STATIC_SNAPSHOT) return;
+  const a = await j('/api/approve/' + id, { method: 'POST' });
+  const b = document.getElementById('approve'); b.disabled = true; b.textContent = 'Approved by ' + a.by + ' · ' + a.at;
 }
 async function energy() {
   const e = await j('/api/energy'), r = e.result;

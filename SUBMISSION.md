@@ -17,7 +17,7 @@ Deadline: **18.10.2026, 10:00 UTC = 15:00 Tashkent**. Target: submit by **12:00 
 
 **Track:** Track 1 · Intelligent Industry. Partner prizes: Evolus Business Agents on AMD + Google (if confirmed eligible).
 
-**Technology tags:** AMD Developer Cloud · AMD ROCm · AMD Token Factory · Evolus · Gemma (only if the live model is Gemma) · vLLM (only if used) · FastAPI · Python · Docker
+**Technology tags:** AMD Token Factory · AMD ROCm · Gemma · Evolus · FastAPI · Python · Docker
 
 **Long description:**
 
@@ -27,16 +27,19 @@ Deadline: **18.10.2026, 10:00 UTC = 15:00 Tashkent**. Target: submit by **12:00 
 > 1. Read: an open model served on AMD reads each supplier document in any language and returns every field together with the verbatim line it came from.
 > 2. Check: deterministic rules, not the model, validate each value against the official EC tables. They check accredited verification, plausibility against the EU benchmark for the production route, arithmetic, reporting period and origin.
 > 3. Decide: every document ends in one of three outcomes, ACCEPT, NEEDS SUPPLIER or NEEDS HUMAN. Nothing is auto-accepted when the numbers do not add up.
-> 4. Act: the agent drafts the request to the supplier in the supplier's own language, using only facts from the validator. Evolus runs the process through an email-intake workflow, extraction, AI Tools, a CBAM knowledge library and hand-off to a person.
+> 4. Act: an Evolus agent, "CBAM Supplier Follow-up", running on the space's own model (Gemma-4-31B-IT on AMD), writes the request to the supplier in the supplier's own language from the validator's facts and a CBAM rules knowledge library. The Evolus AI Tool "anonymize" removes personal data from the evidence file before it goes to the auditor. A person approves every request in the app before anything is sent.
 > 5. Count: the agent shows € exposure per supplier and per quarter: at the EU default, with the evidence already verified, and if pending suppliers verify.
 >
 > Module B covers Transizione 5.0 energy evidence. A baseline regression (production, weather, hour of week) measures an efficiency retrofit with a 95% interval and drafts the note for the certified energy manager. No language model touches the numbers.
 >
-> **Built on AMD.** All model calls go to open models served on AMD infrastructure (AMD Token Factory). Confidential trade documents never go to a closed API. The demo shows a live AMD inference panel with latency per page, pages per minute and tokens per second.
+> **Built on AMD.** Every model call goes to Gemma-4-31B-IT served on AMD infrastructure (AMD Token Factory), both from the app and from the Evolus agent, which is connected to the same AMD endpoint as the space's own model. Confidential trade documents never go to a closed API. The demo shows a live AMD inference panel with latency per page and tokens per second.
 >
 > **Measured this week:**
-> - [extraction accuracy on 6 documents in 6 languages: X/Y fields]
-> - [median latency per page on AMD]
+> - field accuracy on 6 supplier documents in 6 languages: 65/66 (98.5%) in the last run, 92.4–98.5% over 5 full runs
+> - 0 false accepts in 30 documents; decisions 6/6 in the last run
+> - the model misread a CN code 3 times in 30 reads; the rules caught it every time and never auto-accepted, and a rules-guided re-read fixed it once
+> - median 19–55 s per page on the shared AMD endpoint, 6 documents in 54–109 s with 4 in parallel
+> - Evolus: 3/3 supplier requests written by the agent on the AMD model, 9/9 Evolus API calls OK
 > - CBAM calculator matches the verified reference model in 18/18 cases within €1/t
 > - 123 countries of official EC default values parsed
 > - energy module recovers 7.19% against a true saving of 7.20% (95% interval 6.92–7.47%)

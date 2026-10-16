@@ -33,8 +33,9 @@ Indonesian, Ukrainian or Vietnamese. Italian buyers already call the defaults "u
    reporting period, country of origin.
 3. **Decide** — every document ends in one of three outcomes: **ACCEPT**, **NEEDS SUPPLIER** (missing / unverified data),
    **NEEDS HUMAN** (contradiction or implausible value). Nothing is accepted automatically when the numbers don't add up.
-4. **Act** — the agent drafts the request to the supplier **in the supplier's language**, listing exactly what is missing and
-   what it costs; **Evolus** workflows run the intake → follow-up process end to end.
+4. **Act** — the **Evolus agent "CBAM Supplier Follow-up"**, running on the space's own model (Gemma-4-31B-IT on AMD), writes the
+   request to the supplier **in the supplier's language** from the validator's facts and a CBAM rules knowledge library. The Evolus
+   AI Tool **anonymize** removes personal data from the evidence file for the auditor. **A person approves** every request in the app.
 5. **Count** — € exposure per supplier and for the whole quarter: EU default vs. verified evidence vs. potential if pending
    suppliers verify.
 
@@ -44,7 +45,7 @@ for the certified energy manager (EGE). No language model in the numbers.
 
 ## Demo
 
-- Live demo: _(link added at submission)_
+- Live demo (recorded from live AMD runs): https://factory-evidence.netlify.app
 - Run locally in one command: `docker build -t factory-evidence . && docker run -p 8080:8080 --env-file .env factory-evidence`
   then open http://localhost:8080. Without keys the app runs on bundled demo data and says so ("DEMO DATA" badge).
 
@@ -55,7 +56,9 @@ supplier scan ──► open vision model on AMD (Token Factory, OpenAI-compatib
                                                                                      │
 official EU tables (EC Excel, parsed) ──► CBAM calculator ◄── deterministic validator ┘
                                                │
-                    € per tonne · decision ────┼──► supplier letter (model, facts only) ──► Evolus workflow / AI Tools
+                    € per tonne · decision ────┼──► Evolus agent on the AMD model (facts only) ──► request in the supplier's language
+                                               ├──► Evolus AI Tool "anonymize" ──► evidence file for the auditor
+                                               ├──► person approves (recorded, never automatic)
                                                └──► portfolio view · AMD inference panel (latency, tok/s, pages/min)
 ```
 
@@ -65,19 +68,38 @@ official EU tables (EC Excel, parsed) ──► CBAM calculator ◄── determ
 | Deterministic validator | `backend/fea/cbam/validator.py` |
 | Document extraction (vision, evidence per field) | `backend/fea/extract/cbam_doc.py` |
 | Supplier letters (facts from the validator only) | `backend/fea/extract/letters.py` |
-| Evolus client (workflows, AI Tools, knowledge library) | `backend/fea/evolus.py` |
+| Evolus client (agent via OpenAI-compatible endpoint, AI Tools, workflows) | `backend/fea/evolus.py` |
+| Live benchmark (accuracy, decisions, latency, Evolus calls) | `scripts/bench_live.py` → `results/` |
+| Knowledge library document for the Evolus agent | `docs/evolus/CBAM_supplier_evidence_rules.pdf` |
 | Energy baseline (Transizione 5.0) | `backend/fea/energy/baseline.py` |
 | API + UI | `backend/fea/server.py`, `web/index.html` |
 | Synthetic supplier documents (6 languages) + truth files | `data/samples/`, `scripts/make_samples.py` |
 
 ### AMD
-All model calls go to open models served on AMD infrastructure through AMD Token Factory (OpenAI-compatible endpoint).
-The UI shows the live AMD inference panel: median latency per page, pages per minute, tokens per second. Confidential trade
-data never goes to a closed API.
+Every model call goes to **Gemma-4-31B-IT served on AMD** through AMD Token Factory (OpenAI-compatible endpoint): document
+reading in the app, and the Evolus agent, whose "own model" is the same AMD endpoint. Confidential trade data never goes to a
+closed API. The UI shows a live AMD inference panel (latency per page, tokens per second).
 
-### Evolus
-Evolus runs the business process: the email-triggered intake workflow, document extraction, AI Tools (translate, anonymize),
-a knowledge library with the CBAM regulation (answers with sources) and the hand-off to a person.
+### Evolus (Business Agents on AMD)
+- **Own model on AMD:** the Evolus space connects to the AMD endpoint (OpenAI-compatible, all Evolus connection tests passed).
+- **Agent "CBAM Supplier Follow-up"** on that model writes every supplier request, called from the app through the Evolus
+  OpenAI-compatible endpoint (`model = <applicationId>:<agentId>`).
+- **Knowledge library** "CBAM Supplier Follow-up": the rules the validator applies (formula, factors, decision rules, sources).
+- **AI Tool "anonymize"**: personal data removed from the evidence file before it goes to the auditor (GDPR).
+- **Hand-off to a person:** NEEDS HUMAN documents are never auto-accepted; every supplier request needs a person's approval.
+
+## Measured (live, 16.10.2026)
+
+Reproduce with `python3 scripts/bench_live.py` (results saved in `results/bench_live_*.json`). Synthetic documents, fictional companies.
+
+| What | Result |
+|---|---|
+| Field accuracy · 6 documents · 6 languages | 65/66 (98.5%) last run · 92.4–98.5% over 5 full runs |
+| Decisions · false accepts | 6/6 last run · **0 false accepts in 30 documents** |
+| Model misread a CN code | 3 of 30 reads · caught by the rules every time · never auto-accepted · 1 fixed by a rules-guided re-read |
+| Latency, shared AMD endpoint | median 19–55 s per page · 6 documents in 54–109 s (4 in parallel) |
+| Evolus | 3/3 supplier requests written by the agent on the AMD model · 9/9 Evolus API calls OK |
+| Cost | 108 Token Factory requests on 16.10 used 0.0031 of the 1-point daily cap |
 
 ## Run and test
 

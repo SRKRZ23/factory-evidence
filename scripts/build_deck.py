@@ -38,13 +38,48 @@ ID = an["01_indonesia_slab_verified"]["assessment"]["exposure"]
 live = status.get("live_model")
 er = energy["result"]
 
-if live and bench.get("calls"):
+def bench_runs():
+    """All saved live benchmark runs of the full 6-document set (scripts/bench_live.py), oldest first."""
+    runs = []
+    for f in sorted((ROOT / "results").glob("bench_live_*.json")):
+        if f.stem.endswith("_demo"):
+            continue
+        d = json.loads(f.read_text())
+        s = d["summary"]
+        if s.get("documents") == 6 and not s.get("errors") and "Gemma" in str(s.get("vision_model")) and s["mode"].startswith("LIVE"):
+            runs.append(d)
+    return runs
+
+
+RUNS = bench_runs()
+if RUNS:
+    last = RUNS[-1]["summary"]
+    accs = [r["summary"]["field_accuracy_pct"] for r in RUNS]
+    fa = sum(r["summary"]["false_accepts"] for r in RUNS)
+    # early runs did not store field diffs; there an ACCEPT-expected document escalated to a person was the CN misread
+    cn_misreads = sum(1 for r in RUNS for row in r["rows"]
+                      if "cn_code" in (row.get("mismatches") or {}) or row.get("reread")
+                      or ("mismatches" not in row and row.get("expected") == "ACCEPT" and row.get("decision") == "NEEDS_HUMAN"))
+    rereads_fixed = sum(1 for r in RUNS for row in r["rows"] if (row.get("reread") or {}).get("cn_code"))
+    reads = sum(len(r["rows"]) for r in RUNS)
+    meds = [r["summary"]["read_seconds_median"] for r in RUNS if r["summary"].get("read_seconds_median")]
+    walls = [r["summary"]["wall_seconds"] for r in RUNS]
+    amd_rows = [
+        ("Model on AMD (AMD Token Factory), the same model behind the Evolus agent", f"<b>{last['vision_model']}</b>", "MEASURED"),
+        ("Field accuracy vs truth · 6 docs · 6 languages (last run · all runs)",
+         f"<b>{last['fields_exact']}</b> ({last['field_accuracy_pct']}%) · range {min(accs)}–{max(accs)}% over {len(RUNS)} runs", "MEASURED"),
+        ("Decisions correct · false accepts (all runs)",
+         f"<b>{last['decisions_correct']}</b> last run · <b>{fa}</b> false accepts in {reads} documents", "MEASURED"),
+        ("Model misread a CN code; the rules caught it",
+         f"<b>{cn_misreads}</b> of {reads} reads · never auto-accepted · {rereads_fixed} fixed by a rules-guided re-read", "MEASURED"),
+        ("Latency on the shared AMD endpoint (4 documents in parallel)",
+         f"median <b>{min(meds):.0f}–{max(meds):.0f} s</b> per page · 6 documents in {min(walls):.0f}–{max(walls):.0f} s", "MEASURED")]
+    if last.get("evolus_calls"):
+        amd_rows.append(("Evolus agent on the space's own AMD model + AI Tool “anonymize”",
+                         f"<b>{last['letters_by_evolus_agent']}/3</b> supplier requests written · <b>{last['evolus_calls_ok']}/{last['evolus_calls']}</b> Evolus API calls OK", "MEASURED"))
+elif live and bench.get("calls"):
     amd_rows = [("Model on AMD", f"<b>{bench['model']}</b>", "MEASURED"),
-                ("Median extraction latency", f"<b>{bench['extract_seconds_median']} s</b> per page", "MEASURED"),
-                ("Throughput", f"<b>{bench['pages_per_minute']}</b> pages/min · <b>{bench['completion_tok_per_s_median']}</b> tok/s", "MEASURED")]
-    acc = json.loads((ROOT / "results" / "extraction_accuracy.json").read_text()) if (ROOT / "results" / "extraction_accuracy.json").exists() else None
-    if acc:
-        amd_rows.append(("Field accuracy vs truth (6 docs, 6 languages)", f"<b>{acc['correct']}/{acc['total']}</b> fields", "MEASURED"))
+                ("Median extraction latency", f"<b>{bench['extract_seconds_median']} s</b> per page", "MEASURED")]
 else:
     amd_rows = [("Extraction on AMD (accuracy, latency, pages/min)", "<b>pending live Token Factory key</b>", "PENDING")]
 

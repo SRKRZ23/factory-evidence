@@ -1,0 +1,277 @@
+{
+ "summary": {
+  "mode": "LIVE on AMD",
+  "endpoint": "developer.amd.com.cn",
+  "vision_model": "Gemma-4-31B-IT",
+  "text_model": "Gemma-4-31B-IT",
+  "documents": 6,
+  "errors": 0,
+  "fields_exact": "65/66",
+  "field_accuracy_pct": 98.5,
+  "decisions_correct": "6/6",
+  "false_accepts": 0,
+  "model_calls": 6,
+  "read_seconds_median": 55.361,
+  "completion_tok_per_s_median": 6.3,
+  "wall_seconds": 109.2,
+  "pages_per_minute_effective": 3.3,
+  "prompt_tokens": 5868,
+  "completion_tokens": 1781,
+  "points_spent_estimate": 0.0083,
+  "evolus_calls": 9,
+  "evolus_calls_ok": 9,
+  "letters_by_evolus_agent": 3,
+  "note": "fields compared whitespace/case/dash-insensitive; numbers rel. tol 1e-6; carbon_price_paid 0 == not paid (null)"
+ },
+ "rows": [
+  {
+   "id": "01_indonesia_slab_verified",
+   "lang": "id",
+   "fields_exact": 12,
+   "fields_total": 12,
+   "decision": "ACCEPT",
+   "expected": "ACCEPT",
+   "decision_ok": true,
+   "false_accept": false,
+   "mismatches": {},
+   "reread": null,
+   "findings": [],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": null,
+   "letter_source": null,
+   "pipeline_seconds": 29.87
+  },
+  {
+   "id": "04_turkey_billet_eaf_verified",
+   "lang": "tr",
+   "fields_exact": 12,
+   "fields_total": 12,
+   "decision": "ACCEPT",
+   "expected": "ACCEPT",
+   "decision_ok": true,
+   "false_accept": false,
+   "mismatches": {},
+   "reread": null,
+   "findings": [],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": null,
+   "letter_source": null,
+   "pipeline_seconds": 60.04
+  },
+  {
+   "id": "03_india_slab_selfdeclared",
+   "lang": "en",
+   "fields_exact": 10,
+   "fields_total": 10,
+   "decision": "NEEDS_SUPPLIER",
+   "expected": "NEEDS_SUPPLIER",
+   "decision_ok": true,
+   "false_accept": false,
+   "mismatches": {},
+   "reread": null,
+   "findings": [
+    {
+     "code": "not_verified",
+     "severity": "supplier",
+     "message": "emissions are self-declared; only values verified by an accredited verifier can replace the default",
+     "field": "verified"
+    }
+   ],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "English",
+   "letter_source": "evolus-agent",
+   "pipeline_seconds": 74.98
+  },
+  {
+   "id": "05_vietnam_missing_fields",
+   "lang": "vi",
+   "fields_exact": 10,
+   "fields_total": 10,
+   "decision": "NEEDS_SUPPLIER",
+   "expected": "NEEDS_SUPPLIER",
+   "decision_ok": true,
+   "false_accept": false,
+   "mismatches": {},
+   "reread": null,
+   "findings": [
+    {
+     "code": "missing_field",
+     "severity": "supplier",
+     "message": "cn code is not stated in the document",
+     "field": "cn_code"
+    },
+    {
+     "code": "missing_field",
+     "severity": "supplier",
+     "message": "production route is not stated in the document",
+     "field": "production_route"
+    },
+    {
+     "code": "missing_field",
+     "severity": "supplier",
+     "message": "reporting period start is not stated in the document",
+     "field": "reporting_period_start"
+    },
+    {
+     "code": "missing_field",
+     "severity": "supplier",
+     "message": "reporting period end is not stated in the document",
+     "field": "reporting_period_end"
+    },
+    {
+     "code": "verifier_unknown",
+     "severity": "supplier",
+     "message": "document says verified but does not name the verifier / accreditation",
+     "field": "verifier_name"
+    }
+   ],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "Vietnamese",
+   "letter_source": "evolus-agent",
+   "pipeline_seconds": 46.45
+  },
+  {
+   "id": "02_china_hrc_verified",
+   "lang": "zh",
+   "fields_exact": 12,
+   "fields_total": 12,
+   "decision": "ACCEPT",
+   "expected": "ACCEPT",
+   "decision_ok": true,
+   "false_accept": false,
+   "mismatches": {},
+   "reread": null,
+   "findings": [],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": null,
+   "letter_source": null,
+   "pipeline_seconds": 86.46
+  },
+  {
+   "id": "06_ukraine_implausible",
+   "lang": "uk",
+   "fields_exact": 9,
+   "fields_total": 10,
+   "decision": "NEEDS_HUMAN",
+   "expected": "NEEDS_HUMAN",
+   "decision_ok": true,
+   "false_accept": false,
+   "mismatches": {
+    "installation_name": {
+     "got": "Приазовська Сталь – Конвертний цех",
+     "truth": "Приазовська Сталь — Конверторний цех"
+    }
+   },
+   "reread": null,
+   "findings": [
+    {
+     "code": "implausibly_low",
+     "severity": "human",
+     "message": "0.35 tCO2e/t is below half of the EU benchmark for route C (1.364); too good to accept without a person checking the monitoring plan",
+     "field": "specific_direct_emissions"
+    }
+   ],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "Ukrainian",
+   "letter_source": "evolus-agent",
+   "pipeline_seconds": 49.21
+  }
+ ],
+ "calls": [
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 25.744,
+   "prompt_tokens": 978,
+   "completion_tokens": 369
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 55.361,
+   "prompt_tokens": 978,
+   "completion_tokens": 349
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 58.295,
+   "prompt_tokens": 978,
+   "completion_tokens": 246
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 30.632,
+   "prompt_tokens": 978,
+   "completion_tokens": 140
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 80.454,
+   "prompt_tokens": 978,
+   "completion_tokens": 385
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 33.565,
+   "prompt_tokens": 978,
+   "completion_tokens": 292
+  }
+ ],
+ "evolus_log": [
+  {
+   "call": "POST /ai-tools/anonymize/run",
+   "status": 200,
+   "seconds": 4.1
+  },
+  {
+   "call": "POST /ai-tools/anonymize/run",
+   "status": 200,
+   "seconds": 4.67
+  },
+  {
+   "call": "POST /v1/chat/completions (agent)",
+   "status": 200,
+   "seconds": 12.18
+  },
+  {
+   "call": "POST /v1/chat/completions (agent)",
+   "status": 200,
+   "seconds": 11.71
+  },
+  {
+   "call": "POST /ai-tools/anonymize/run",
+   "status": 200,
+   "seconds": 4.5
+  },
+  {
+   "call": "POST /ai-tools/anonymize/run",
+   "status": 200,
+   "seconds": 4.11
+  },
+  {
+   "call": "POST /ai-tools/anonymize/run",
+   "status": 200,
+   "seconds": 6.0
+  },
+  {
+   "call": "POST /v1/chat/completions (agent)",
+   "status": 200,
+   "seconds": 10.67
+  },
+  {
+   "call": "POST /ai-tools/anonymize/run",
+   "status": 200,
+   "seconds": 4.96
+  }
+ ]
+}

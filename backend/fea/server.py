@@ -22,8 +22,9 @@ from fastapi.staticfiles import StaticFiles
 
 from .cbam.validator import assess
 from .evolus import Evolus
-from .extract.cbam_doc import extract, extract_demo
-from .extract.letters import draft
+from .extract.cbam_doc import extract, extract_demo, reread_cn
+from .extract.letters import LANG_NAME, draft
+from .extract.letters import facts as letter_facts
 from .llm import AMDModel
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -40,6 +41,7 @@ app = FastAPI(title="Factory Evidence Agent")
 MODEL = AMDModel()
 EVOLUS = Evolus()
 CACHE: dict[str, dict] = {}
+APPROVALS: dict[str, dict] = {}   # the person's decision on each supplier request (never automatic)
 FORCE_DEMO = os.getenv("DEMO_MODE", "") == "1"
 
 
@@ -51,6 +53,20 @@ def register() -> dict:
 
 def live() -> bool:
     return MODEL.live and not FORCE_DEMO
+
+
+def cn_candidates(country: str | None, code: str) -> list[str]:
+    """Real CN codes of the same 6-digit heading in the official default-value table for this country."""
+    from .cbam import calculator as C
+    d = "".join(ch for ch in str(code) if ch.isdigit())[:6]
+    if len(d) < 6 or not country:
+        return []
+    try:
+        keys = C.tables()["default_values"][C._country_sheet(country)]
+    except KeyError:
+        return []
+    fmt = lambda k: " ".join([k[:4], k[4:6], k[6:8]] + ([k[8:10]] if len(k) >= 10 else []))  # noqa: E731
+    return [fmt(k) for k in sorted(keys) if k.startswith(d) and len(k) >= 8][:12]
 
 
 def analyze_path(path: Path, key: str) -> dict:
@@ -66,15 +82,55 @@ def analyze_path(path: Path, key: str) -> dict:
     reg = register().get((str(v.get("installation_country") or ""), str(v.get("cn_code") or "")[:4]))
     tonnes = reg["tonnes"] if reg else None
     a = assess(v, import_year=2026, tonnes=tonnes).to_json()
+    # Rules-guided re-read: a CN code that does not exist in the official tables is almost always a misread digit.
+    if live() and v.get("cn_code") and any(f.get("code") == "unknown_good_or_country" and f.get("field") == "cn_code" for f in a["findings"]):
+        cands = cn_candidates(v.get("installation_country"), v["cn_code"])
+        if cands:
+            try:
+                rr = reread_cn(path, MODEL, v["cn_code"], cands)
+            except Exception as e:
+                rr = {"cn_code": None, "printed": None, "error": f"{type(e).__name__}: {str(e)[:150]}"}
+            ex["reread"] = {"field": "cn_code", "first_read": v["cn_code"], "candidates": cands, **rr}
+            if rr.get("cn_code"):
+                first = v["cn_code"]
+                v = {**v, "cn_code": rr["cn_code"]}
+                ex["values"] = v
+                a = assess(v, import_year=2026, tonnes=tonnes).to_json()
+                a["findings"].append({"severity": "info", "code": "cn_code_corrected_on_reread", "field": "cn_code",
+                                      "message": f"First reading {first} is not in the official EU tables; a second, closed-set reading "
+                                                 f"chose {rr['cn_code']} (printed: {rr.get('printed')}). Check against the document."})
     letter = None
     if a["decision"] != "ACCEPT":
-        letter = draft(v, a, ex.get("language") or "en", MODEL if live() else None, tonnes=tonnes)
-        if EVOLUS.connected and letter["source"] == "demo":
+        lang = ex.get("language") or "en"
+        if live() and EVOLUS.agent_ready:
+            # The Evolus agent "CBAM Supplier Follow-up" writes the request, on the space's own model (Gemma on AMD),
+            # from the validator's facts only. Falls back to a direct model call if Evolus does not answer.
+            f = letter_facts(v, a, "Acciai Liguri S.r.l.", tonnes)
             try:
-                letter = {**letter, "body": EVOLUS.translate(letter["body"], ex.get("language") or "en"), "source": "evolus-translate"}
+                body = EVOLUS.agent_reply(f"Language: {LANG_NAME.get(lang, 'English')}\n\nFACTS:\n{f}")
+                letter = {"language": LANG_NAME.get(lang, "English"), "body": body.strip(), "facts": f,
+                          "source": "evolus-agent", "model": f"{MODEL.model} on AMD via Evolus agent"}
             except Exception as e:
-                letter["evolus_error"] = str(e)[:200]
-    out = {"id": key, "extraction": ex, "assessment": a, "letter": letter, "tonnes": tonnes, "seconds": round(time.perf_counter() - t0, 2)}
+                letter = {**draft(v, a, lang, MODEL, tonnes=tonnes), "evolus_error": f"{type(e).__name__}: {str(e)[:150]}"}
+        else:
+            letter = draft(v, a, lang, MODEL if live() else None, tonnes=tonnes)
+            if EVOLUS.connected and letter["source"] == "demo":
+                try:
+                    letter = {**letter, "body": EVOLUS.translate(letter["body"], lang), "source": "evolus-translate"}
+                except Exception as e:
+                    letter["evolus_error"] = str(e)[:200]
+    pack = None
+    if EVOLUS.connected and not key.startswith("upload:"):
+        # Evidence file for the auditor: values with their verbatim quotes, personal data removed by Evolus AI Tool "anonymize".
+        lines = [f"Supplier evidence file · decision {a['decision']}"] + [
+            f"- {k.replace('_', ' ')}: {val}" + (f'  (quote: "{(ex.get("evidence") or {}).get(k)}")' if (ex.get("evidence") or {}).get(k) else "")
+            for k, val in v.items() if val not in (None, "")] + [f"- check: {fd['message']}" for fd in a["findings"]]
+        try:
+            pack = {"body": EVOLUS.anonymize("\n".join(lines)), "source": "evolus-anonymize"}
+        except Exception as e:
+            pack = {"body": None, "source": "evolus-anonymize", "error": f"{type(e).__name__}: {str(e)[:150]}"}
+    out = {"id": key, "extraction": ex, "assessment": a, "letter": letter, "auditor_pack": pack, "tonnes": tonnes,
+           "approval": APPROVALS.get(key), "seconds": round(time.perf_counter() - t0, 2)}
     CACHE[key] = out
     return out
 
@@ -83,7 +139,7 @@ def analyze_path(path: Path, key: str) -> dict:
 def status():
     return {"live_model": live(), "model": MODEL.model or None, "vision_model": MODEL.vision_model or None,
             "endpoint": MODEL.base_url.split("//")[-1].split("/")[0] if MODEL.base_url else None,
-            "evolus_connected": EVOLUS.connected, "demo_mode": not live()}
+            "evolus_connected": EVOLUS.connected, "evolus_agent": EVOLUS.agent_ready, "demo_mode": not live()}
 
 
 @app.get("/api/samples")
@@ -185,6 +241,16 @@ def energy():
                 "\nVerifiche in sito a cura dell'EGE: perimetro di misura, taratura contatori, assenza di altre modifiche nel periodo.")
         src = "demo"
     return {"result": r, "facts": facts, "dossier": note, "source": src, "data": "synthetic 15-min meter data (fictional plant)"}
+
+
+@app.post("/api/approve/{sid}")
+def approve(sid: str, who: str = "compliance officer"):
+    """A person approves the supplier request before anything is sent: the human step is recorded, never automatic."""
+    if sid not in CACHE:
+        raise HTTPException(404, "analyse the document first")
+    APPROVALS[sid] = {"by": who, "at": time.strftime("%Y-%m-%d %H:%M:%S")}
+    CACHE[sid]["approval"] = APPROVALS[sid]
+    return APPROVALS[sid]
 
 
 @app.get("/api/evolus-log")

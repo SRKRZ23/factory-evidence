@@ -1,0 +1,187 @@
+{
+ "summary": {
+  "mode": "LIVE on AMD",
+  "endpoint": "developer.amd.com.cn",
+  "vision_model": "Gemma-4-31B-IT",
+  "text_model": "Gemma-4-31B-IT",
+  "documents": 6,
+  "errors": 0,
+  "fields_exact": "61/66",
+  "field_accuracy_pct": 92.4,
+  "decisions_correct": "5/6",
+  "false_accepts": 0,
+  "model_calls": 10,
+  "read_seconds_median": 39.078,
+  "completion_tok_per_s_median": 16.2,
+  "wall_seconds": 100.6,
+  "pages_per_minute_effective": 3.6,
+  "prompt_tokens": 6461,
+  "completion_tokens": 4247,
+  "points_spent_estimate": 0.016,
+  "note": "fields compared whitespace/case-insensitive; numbers with relative tolerance 1e-6"
+ },
+ "rows": [
+  {
+   "id": "04_turkey_billet_eaf_verified",
+   "lang": "tr",
+   "fields_exact": 11,
+   "fields_total": 12,
+   "decision": "ACCEPT",
+   "expected": "ACCEPT",
+   "decision_ok": true,
+   "false_accept": false,
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": null,
+   "letter_source": null,
+   "pipeline_seconds": 35.81
+  },
+  {
+   "id": "02_china_hrc_verified",
+   "lang": "zh",
+   "fields_exact": 12,
+   "fields_total": 12,
+   "decision": "ACCEPT",
+   "expected": "ACCEPT",
+   "decision_ok": true,
+   "false_accept": false,
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": null,
+   "letter_source": null,
+   "pipeline_seconds": 39.08
+  },
+  {
+   "id": "03_india_slab_selfdeclared",
+   "lang": "en",
+   "fields_exact": 9,
+   "fields_total": 10,
+   "decision": "NEEDS_SUPPLIER",
+   "expected": "NEEDS_SUPPLIER",
+   "decision_ok": true,
+   "false_accept": false,
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "English",
+   "letter_source": "live",
+   "pipeline_seconds": 43.43
+  },
+  {
+   "id": "01_indonesia_slab_verified",
+   "lang": "id",
+   "fields_exact": 10,
+   "fields_total": 12,
+   "decision": "NEEDS_HUMAN",
+   "expected": "ACCEPT",
+   "decision_ok": false,
+   "false_accept": false,
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "Indonesian",
+   "letter_source": "live",
+   "pipeline_seconds": 57.91
+  },
+  {
+   "id": "05_vietnam_missing_fields",
+   "lang": "vi",
+   "fields_exact": 10,
+   "fields_total": 10,
+   "decision": "NEEDS_SUPPLIER",
+   "expected": "NEEDS_SUPPLIER",
+   "decision_ok": true,
+   "false_accept": false,
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "Vietnamese",
+   "letter_source": "live",
+   "pipeline_seconds": 63.72
+  },
+  {
+   "id": "06_ukraine_implausible",
+   "lang": "uk",
+   "fields_exact": 9,
+   "fields_total": 10,
+   "decision": "NEEDS_HUMAN",
+   "expected": "NEEDS_HUMAN",
+   "decision_ok": true,
+   "false_accept": false,
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "Ukrainian",
+   "letter_source": "live",
+   "pipeline_seconds": 61.51
+  }
+ ],
+ "calls": [
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 32.44,
+   "prompt_tokens": 906,
+   "completion_tokens": 530
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 35.812,
+   "prompt_tokens": 906,
+   "completion_tokens": 599
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 37.987,
+   "prompt_tokens": 906,
+   "completion_tokens": 617
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 39.078,
+   "prompt_tokens": 906,
+   "completion_tokens": 653
+  },
+  {
+   "task": "letter",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 10.967,
+   "prompt_tokens": 276,
+   "completion_tokens": 176
+  },
+  {
+   "task": "letter",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 19.919,
+   "prompt_tokens": 234,
+   "completion_tokens": 167
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 47.403,
+   "prompt_tokens": 906,
+   "completion_tokens": 462
+  },
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 51.511,
+   "prompt_tokens": 906,
+   "completion_tokens": 591
+  },
+  {
+   "task": "letter",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 16.316,
+   "prompt_tokens": 236,
+   "completion_tokens": 225
+  },
+  {
+   "task": "letter",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 9.996,
+   "prompt_tokens": 279,
+   "completion_tokens": 227
+  }
+ ]
+}

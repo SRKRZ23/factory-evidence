@@ -102,13 +102,43 @@ def normalise(raw: dict) -> tuple[dict, dict]:
     return values, evidence
 
 
+COMPACT_RULES = """
+Output size rules (strict):
+- OMIT every field that is not present in the document (do not write null entries).
+- Output minified JSON on one line, no spaces after ':' or ','.
+- evidence: the shortest verbatim span that contains the value (the number with its unit, or the name), not the whole line."""
+
+
 def extract(path: Path, model: AMDModel) -> dict:
+    import os
+    system = SYSTEM + (COMPACT_RULES if os.getenv("FEA_COMPACT") == "1" else "")
     content = [{"type": "text", "text": "Extract the CBAM fields from this supplier document."}, image_part(path)]
-    text = model.chat("extract", [{"role": "system", "content": SYSTEM}, {"role": "user", "content": content}], vision=True, max_tokens=1800)
+    text = model.chat("extract", [{"role": "system", "content": system}, {"role": "user", "content": content}], vision=True, max_tokens=1800)
     raw = parse_json(text)
     values, evidence = normalise(raw)
     return {"values": values, "evidence": evidence, "language": raw.get("language"), "document_type": raw.get("document_type"),
             "source": "live", "model": model.vision_model}
+
+
+REREAD_SYSTEM = """You re-read ONE field of a supplier document: the Combined Nomenclature (CN) code of the good.
+A first reading produced a code that does not exist in the official EU CBAM tables. Look at the document again and read the CN code
+digit by digit. Answer ONLY with a JSON object: {"cn_code": "<one of the candidates exactly as listed, or NONE>", "printed": "<the digits exactly as printed>"}.
+Choose NONE if the printed code is not one of the candidates. Never pick a candidate that is not what is printed."""
+
+
+def reread_cn(path: Path, model: AMDModel, first_read: str, candidates: list[str]) -> dict:
+    """Rules-guided re-read: the validator found no such CN code in the official tables, so ask the model to choose
+    among the real codes of the same 6-digit heading (closed set) or NONE. One extra call, only on flagged documents."""
+    content = [{"type": "text", "text": f"First reading: {first_read}\nCandidates (official EU tables, same heading): {', '.join(candidates)}"},
+               image_part(path)]
+    text = model.chat("reread_cn", [{"role": "system", "content": REREAD_SYSTEM}, {"role": "user", "content": content}],
+                      vision=True, max_tokens=200)
+    raw = parse_json(text)
+    digits = lambda s: "".join(ch for ch in str(s or "") if ch.isdigit())  # noqa: E731
+    by_digits = {digits(c): c for c in candidates}
+    # Accept only an official candidate: either the model's pick, or the digits it says are printed.
+    choice = by_digits.get(digits(raw.get("cn_code"))) or by_digits.get(digits(raw.get("printed")))
+    return {"cn_code": choice, "printed": raw.get("printed"), "model_pick": raw.get("cn_code")}
 
 
 def extract_demo(path: Path) -> dict:

@@ -1,0 +1,74 @@
+{
+ "summary": {
+  "mode": "LIVE on AMD",
+  "endpoint": "developer.amd.com.cn",
+  "vision_model": "Gemma-4-31B-IT",
+  "text_model": "Gemma-4-31B-IT",
+  "documents": 1,
+  "errors": 0,
+  "fields_exact": "10/12",
+  "field_accuracy_pct": 83.3,
+  "decisions_correct": "0/1",
+  "false_accepts": 0,
+  "model_calls": 2,
+  "read_seconds_median": 33.07,
+  "completion_tok_per_s_median": 18.7,
+  "wall_seconds": 42.4,
+  "pages_per_minute_effective": 1.4,
+  "prompt_tokens": 1140,
+  "completion_tokens": 780,
+  "points_spent_estimate": 0.0029,
+  "note": "fields compared whitespace/case-insensitive; numbers with relative tolerance 1e-6"
+ },
+ "rows": [
+  {
+   "id": "01_indonesia_slab_verified",
+   "lang": "id",
+   "fields_exact": 10,
+   "fields_total": 12,
+   "decision": "NEEDS_HUMAN",
+   "expected": "ACCEPT",
+   "decision_ok": false,
+   "false_accept": false,
+   "mismatches": {
+    "installation_name": {
+     "got": "PT Baja Samudra Nusantara – Slab Plant 2",
+     "truth": "PT Baja Samudra Nusantara — Slab Plant 2"
+    },
+    "cn_code": {
+     "got": "7207 11 20",
+     "truth": "7207 11 14"
+    }
+   },
+   "findings": [
+    {
+     "code": "unknown_good_or_country",
+     "severity": "human",
+     "message": "'no default value for CN 7207 11 20 (Indonesia or other countries)'",
+     "field": "cn_code"
+    }
+   ],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": "Indonesian",
+   "letter_source": "live",
+   "pipeline_seconds": 42.39
+  }
+ ],
+ "calls": [
+  {
+   "task": "extract",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 33.07,
+   "prompt_tokens": 906,
+   "completion_tokens": 617
+  },
+  {
+   "task": "letter",
+   "model": "Gemma-4-31B-IT",
+   "seconds": 9.302,
+   "prompt_tokens": 234,
+   "completion_tokens": 163
+  }
+ ]
+}

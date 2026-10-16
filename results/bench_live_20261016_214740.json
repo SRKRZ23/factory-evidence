@@ -1,0 +1,51 @@
+{
+ "summary": {
+  "mode": "LIVE on AMD",
+  "endpoint": "developer.amd.com.cn",
+  "vision_model": "DeepSeek-V4.1-Flash",
+  "text_model": "DeepSeek-V4.1-Flash",
+  "documents": 1,
+  "errors": 0,
+  "fields_exact": "12/12",
+  "field_accuracy_pct": 100.0,
+  "decisions_correct": "1/1",
+  "false_accepts": 0,
+  "model_calls": 1,
+  "read_seconds_median": 138.71,
+  "completion_tok_per_s_median": 2.5,
+  "wall_seconds": 138.7,
+  "pages_per_minute_effective": 0.4,
+  "prompt_tokens": 1625,
+  "completion_tokens": 341,
+  "points_spent_estimate": 0.0018,
+  "note": "fields compared whitespace/case-insensitive; numbers with relative tolerance 1e-6"
+ },
+ "rows": [
+  {
+   "id": "01_indonesia_slab_verified",
+   "lang": "id",
+   "fields_exact": 12,
+   "fields_total": 12,
+   "decision": "ACCEPT",
+   "expected": "ACCEPT",
+   "decision_ok": true,
+   "false_accept": false,
+   "mismatches": {},
+   "findings": [],
+   "extraction_source": "live",
+   "extraction_error": null,
+   "letter_lang": null,
+   "letter_source": null,
+   "pipeline_seconds": 138.73
+  }
+ ],
+ "calls": [
+  {
+   "task": "extract",
+   "model": "DeepSeek-V4.1-Flash",
+   "seconds": 138.71,
+   "prompt_tokens": 1625,
+   "completion_tokens": 341
+  }
+ ]
+}
