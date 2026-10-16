@@ -45,7 +45,7 @@ Deadline: **18.10.2026, 10:00 UTC = 15:00 Tashkent**. Target: submit by **12:00 
 > - energy module recovers 7.19% against a true saving of 7.20% (95% interval 6.92–7.47%)
 > - 34/34 tests, Docker, MIT
 >
-> **Honest limits.** The demo documents and meter data are synthetic. Prices after 2026 are scenarios, not forecasts. The declaration remains the responsibility of the authorised declarant and the accredited verifier.
+> **Honest limits.** The demo documents and meter data are synthetic. Prices after 2026 are scenarios, not forecasts. The declaration remains the responsibility of the authorised declarant and the accredited verifier. The model makes mistakes: it misread a CN code 3 times in 30 reads, and the rules caught every one (0 false accepts). Quotes are transcribed by the model; in 1 of 66 fields a quote had a typo while the value was correct. Token Factory is a shared, rate-limited endpoint (19–55 s per page); a dedicated vLLM on AMD Developer Cloud is the production path.
 >
 > **Business model.** SaaS for CBAM declarants plus a fee per verified tonne, priced at a small fraction of the saving: 1,000 t of Indonesian slab saves about €572k. Sold through customs brokers, CBAM consultants and audit firms, with Evolus as the delivery layer for Italian SMEs. Next: the same intake for EUDR (December 2026) and the battery Digital Product Passport (February 2027).
 >
@@ -58,20 +58,25 @@ Deadline: **18.10.2026, 10:00 UTC = 15:00 Tashkent**. Target: submit by **12:00 
 - Cover: `assets/team_cover_16x9.png` (or a dedicated submission cover)
 - Video: YouTube, unlisted or public
 
-## Video: 2:45, live app on screen at least 60% of the time
+## Video (final cut, 2:18)
 
-The voice-over is written first. Record it per segment (your own voice is preferred; the fallback is TTS, as in ACT I). Captions are burned in, music sits at −25 dB, export is 1080p30 H.264 at about 6 Mbps (under 300 MB). **In CapCut, tick the Audio checkbox on export.**
+Files: `~/Desktop/Factory_Evidence_demo.mp4` (1920×1080, 30 fps, H.264 + AAC, 36 MB) and `Factory_Evidence_demo.srt` (captions for YouTube).
+Built from the live screen recording of 16.10.2026: voice-over (TTS, as in ACT I) and burned-in captions; the API key is never on screen.
 
 | Time | On screen | Voice-over |
 |---|---|---|
-| 0:00–0:12 | Slide 1, then the KPI strip of the app | "An Italian steel importer is paying ten million euros in carbon border tax this quarter. Most of it is avoidable, because the proof is already in their inbox. This is Factory Evidence." |
-| 0:12–0:35 | Slide 2: the default table | "Since January, CBAM charges every imported tonne. If the foreign mill cannot prove its emissions, the importer pays the EU default: six hundred thirty-six euros per tonne of Indonesian slab, versus sixty-three with verified data. The evidence exists, in scans in Chinese, Turkish, Indonesian." |
-| 0:35–1:05 | App: click Indonesia. Scan, then fields with quotes, then ACCEPT, then €636 → €63 | "The model, running on AMD, reads the certificate in Indonesian and quotes the exact line behind every number. Then rules, not the model, check it against the official EU tables: verified, plausible for a blast-furnace route, arithmetic consistent. Accepted. Six hundred thirty-six becomes sixty-three." |
-| 1:05–1:30 | App: click Ukraine. NEEDS HUMAN, implausible flag | "This Ukrainian mill claims 0.35 tonnes of CO2 per tonne of slab, a quarter of the EU benchmark for its route. Too good to be true, so it goes to a person, not into the declaration." |
-| 1:30–1:55 | App: click India. NEEDS SUPPLIER, letter in the supplier's language, Evolus workflow | "India: the numbers are plausible but self-declared. The agent writes to the supplier in their language, saying exactly what is missing and what it costs, and Evolus runs the follow-up." |
-| 1:55–2:15 | App: AMD inference panel and slide 5 | "Everything runs on open models served on AMD: [N] pages per minute, [X] seconds per page, confidential trade data never leaves for a closed API. Our calculator matches the reference model in 18 of 18 cases." |
-| 2:15–2:32 | Slide 6, then slide 7 | "Across one quarter: €10.7 million at defaults, €3.6 million with the evidence already accepted. Priced at a fraction of the saving, sold through customs brokers and CBAM advisors." |
-| 2:32–2:45 | Slide 9 plus links | "The model reads, rules decide, a person approves. I'm Sardor Razikov. I won ACT I with RepoMind, and this week I built Factory Evidence. Repo and demo are linked below." |
+| 0:00–0:09 | Slide 1 | CBAM since January 2026 charges every imported tonne of steel. |
+| 0:09–0:24 | Slide 2 | No proof of emissions → EU default: €636/t for Indonesian slab; evidence buried in scans in five languages. |
+| 0:24–0:42 | App · Indonesia | Gemma on AMD reads the scan and quotes the line behind every value; rules check it against the EU tables; ACCEPT, €636 → €63. |
+| 0:42–0:58 | App · Viet Nam | Missing CN code, route, verifier → NEEDS SUPPLIER; the Evolus agent on the same AMD model writes the request in Vietnamese; a person approves. |
+| 0:58–1:04 | App · auditor file | Evolus AI Tool "anonymize" strips personal data. |
+| 1:04–1:19 | App · Ukraine + quarter | 0.35 t/t below half the benchmark → NEEDS HUMAN; quarter €10.7M → €3.6M. |
+| 1:19–1:31 | App · Module B | Transizione 5.0: 7.19% saving, 95% interval. |
+| 1:31–1:44 | Terminal · live benchmark | 65/66 fields, 6/6 decisions, 0 false accepts, 9/9 Evolus calls. |
+| 1:44–1:56 | Slide 5 | Where it fails: CN code misread 3 of 30 reads, caught every time. |
+| 1:56–2:04 | Evolus | Agent on the space's own model on AMD, rules library, AI Tools. |
+| 2:04–2:09 | Token Factory usage | 108 requests, 0 errors. |
+| 2:09–2:18 | Slide 9 | The model reads, the rules decide, a person approves. |
 
 ## After submitting
 

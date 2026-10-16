@@ -46,6 +46,7 @@ for the certified energy manager (EGE). No language model in the numbers.
 ## Demo
 
 - Live demo (recorded from live AMD runs): https://factory-evidence.netlify.app
+- Demo video (2:18, voice-over + captions): link added at submission
 - Run locally in one command: `docker build -t factory-evidence . && docker run -p 8080:8080 --env-file .env factory-evidence`
   then open http://localhost:8080. Without keys the app runs on bundled demo data and says so ("DEMO DATA" badge).
 
@@ -116,6 +117,13 @@ python -m uvicorn fea.server:app --port 8080 --app-dir backend
 - € figures use the official EU default values and benchmarks; certificate prices after 2026 are scenarios, not forecasts.
 - The tool prepares evidence; the CBAM declaration and the Transizione 5.0 certification remain the responsibility of the
   authorised declarant, the accredited verifier and the EGE.
+- **The model makes mistakes; the rules are the safety net.** Across 5 full live runs, Gemma misread the CN code of one scan
+  3 times in 30 reads (it printed `7207 11 20`, a code that does not exist). The validator caught it every time and never
+  auto-accepted; a rules-guided re-read fixed it once. 0 false accepts in 30 documents.
+- **Quotes are transcribed by the model, not by OCR.** In 1 of 66 fields the quote had a typo ("Diversifikasi" for the printed
+  "Diverifikasi"); the value itself was correct. Checking quotes against an OCR layer is the next step.
+- **Shared endpoint latency.** AMD Token Factory is a shared, rate-limited endpoint (20 requests/min per team): 19–55 s per page.
+  A dedicated vLLM deployment on AMD Developer Cloud is the production path.
 
 ## License
 
