@@ -15,7 +15,7 @@ Deadline: **18.10.2026, 10:00 UTC = 15:00 Tashkent**. Target: submit by **12:00 
 **Short description** (≤ 150, 147 chars):
 > Reads steel suppliers' emissions documents in any language with open models on AMD, checks them against EU CBAM tables and cuts carbon border cost.
 
-**Track:** Track 1 · Intelligent Industry. Partner prizes: Evolus Business Agents on AMD + Google (if confirmed eligible).
+**Track:** Track 1 · Intelligent Industry. Partner prizes: Evolus Business Agents on AMD + Google (Gemma-4-31B-IT running on AMD).
 
 **Technology tags:** AMD Token Factory · AMD ROCm · Gemma · Evolus · FastAPI · Python · Docker
 
